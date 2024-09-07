@@ -24,8 +24,8 @@ jobs:
         id: bump-ver
         run: |
           npm version patch -m"ci(version): bump to v%s"
-          json_version=$(npm version)
-          ${{ fromJson($json_version) }}
+          version=$(npm version --json | jq -r '.root')
+          echo $version
 
       # - name: Bump version
       #   id: bump
