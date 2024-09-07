@@ -1,0 +1,62 @@
+name: Bump version
+description: Bump workspace version
+
+inputs:
+  version:
+    type: string
+    required: true
+  preid:
+    type: string
+    default: ''
+    required: false
+
+outputs:
+  version:
+    description: Outputed version
+    value: ${{ steps.version.outputs.version }}
+  json_version:
+    description: Json version
+    value: ${{ steps.bump-ver.outputs.json_version || steps.bump-pre.outputs.json_version }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+
+    - name: Bump Version
+      id: bump-ver
+      if: inputs.preid == ''
+      run: |
+        npm -ws version ${{ inputs.version }} -m"ci(version): bump to v%s"
+        json_version=$(npm version)
+        echo "json_version=$json_version" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Bump Pre Version
+      id: bump-pre
+      if: inputs.preid != ''
+      run: |
+        npm version ${{ inputs.version }} --preid=${{ inputs.preid }} -m"ci(version): bump to v%s"
+        json_version=$(npm version)
+        echo "json_version=$json_version" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Export version
+      id: version
+      run: |
+        echo "ver: ${{ fromJson(steps.bump-ver.outputs.json_version) }}"
+        echo "pre: ${{ fromJson(steps.bump-pre.outputs.json_version) }}"
+        _bump_ver=${{ fromJson(steps.bump-ver.outputs.json_version).root }}
+        _bump_pre=${{ fromJson(steps.bump-pre.outputs.json_version).root }}
+
+        echo $_bump_ver
+        echo $_bump_pre
+
+        if [ -z "${_bump_ver}"]; then
+          echo "version=$_bump_ver" >> $GITHUB_OUTPUT
+        else
+          echo "version=$_bump_pre" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
