@@ -19,11 +19,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          
+
       - name: Bump Version
         id: bump-ver
-        run: |
-          npm -ws version patch -m"ci(version): bump to v%s"
+        run: >
+          npm version patch -m"ci(version): bump to v%s"
           json_version=$(npm version)
           ${{ fromJson('json_version') }}
 
