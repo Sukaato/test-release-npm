@@ -32,6 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Git
+        run: |
+          git config user.name "Cheese Grinder CI"
+          git config user.email "<>"
+
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
