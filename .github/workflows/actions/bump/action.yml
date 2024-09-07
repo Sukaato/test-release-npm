@@ -31,7 +31,7 @@ runs:
       run: |
         npm -ws version ${{ inputs.version }} -m"ci(version): bump to v%s"
         json_version=$(npm version)
-        ${{ fromJson($json_version) }}
+        ${{ fromJson('$json_version') }}
       shell: bash
 
     - name: Bump Pre Version
@@ -40,5 +40,5 @@ runs:
       run: |
         npm version ${{ inputs.version }} --preid=${{ inputs.preid }} -m"ci(version): bump to v%s"
         json_version=$(npm version)
-        ${{ fromJson($json_version) }}
+        ${{ fromJson("$json_version") }}
       shell: bash

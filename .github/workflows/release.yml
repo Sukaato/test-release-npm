@@ -1,31 +1,7 @@
 name: release
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Release type
-        required: false
-        type: choice
-        default: patch
-        options:
-          - major
-          - minor
-          - patch
-          - premajor
-          - preminor
-          - prepatch
-          - prerelease
-      preid:
-        description: Pre-id
-        required: false
-        type: choice
-        options:
-          - ''
-          - dev
-          - alpha
-          - beta
-          - rc
+  push:
 
 jobs:
   build:
@@ -47,5 +23,4 @@ jobs:
         id: bump
         uses: ./.github/workflows/actions/bump
         with:
-          version: ${{ inputs.version }}
-          preid: ${{ inputs.preid }}
+          version: patch
