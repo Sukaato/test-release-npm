@@ -22,10 +22,10 @@ jobs:
 
       - name: Bump Version
         id: bump-ver
-        run: >
+        run: |
           npm version patch -m"ci(version): bump to v%s"
           json_version=$(npm version)
-          ${{ fromJson('json_version') }}
+          ${{ fromJson($json_version) }}
 
       # - name: Bump version
       #   id: bump
